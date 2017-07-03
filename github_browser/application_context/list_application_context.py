@@ -57,6 +57,9 @@ class ListApplicationContext(ApplicationContext):
         return ''.join([ApplicationContext.ROOT_ENDPOINT, self.PATH_SEARCH, self.get_query_str(time_range)])
 
     def run(self):
+        # Search repositories created in last 10 minutes
+        # If we get more entries then expected, sort them and take first n entries
+        # If we get less, multiply search range
         time_diff = 10
         time_range = get_time_range(time_diff)
         request_url = self.create_query(time_range)
@@ -92,7 +95,7 @@ class ListApplicationContext(ApplicationContext):
                 elif total_repo_count == self.entry_number:
                     break
                 else:
-                    # Our search query contains less item then we need,
+                    # Our search query contains less item then we need
                     # Increase range for filtering and re-try
                     try:
                         if len(items) == 0:
